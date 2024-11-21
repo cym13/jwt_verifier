@@ -51,6 +51,7 @@ class UI:
         self.right_frame = self.create_right_frame(root)
         self.right_frame.grid(column=1, row=0)
 
+        self.do_decode()
         root.mainloop()
 
     def create_left_frame(self, container):
@@ -126,19 +127,12 @@ class UI:
                                          wrap=tk.WORD)
         self.header_field.grid(column=0, row=1)
 
-        default_header_text = '{"alg": "HS256", "typ": "JWT"}'
-        self.header_field.insert(tk.INSERT, default_header_text)
-
         ttk.Label(frame, text="Payload").grid(column=0, row=2, sticky=tk.W)
         self.payload_field = ScrolledText(frame,
                                           height=15,
                                           textvariable=payload_text,
                                           wrap=tk.WORD)
         self.payload_field.grid(column=0, row=3)
-
-        default_payload_text = ('{"sub": "1234567890", "name": "John Doe",'
-                               + ' "iat": 1516239022, "exp": 1816239022}')
-        self.payload_field.insert(tk.INSERT, default_payload_text)
 
         return frame
 
@@ -204,6 +198,7 @@ class UI:
         self.display_payload(json.dumps(self.verifier.payload))
 
     def click_verify(self):
+        self.do_decode()
         self.load_key()
         self.display_verification(self.verifier.verify_signature())
         self.display_expiration(self.verifier.verify_expiration())
